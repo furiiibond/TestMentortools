@@ -68,7 +68,7 @@ class MentorToolsUtils:
         # get all modules
         modulesList = self.driver.find_element(By.ID, "ModulesList")
         # get all children of the modules list
-        modulesListChildrens = modulesList.find_elements(By.XPATH, ".//*")
+        modulesListChildrens = modulesList.find_elements(By.XPATH, "./*")
         # remove the last element (the add module button)
         # get all modules ids
         modulesIds = []
@@ -82,12 +82,16 @@ class MentorToolsUtils:
     '''
     Get all the lessons ids
     '''
-    def get_lessons_ids(self):
+    def get_lessons_ids(self, moduleId=None):
         # wait for element LessonList to load
         WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.ID, "LessonsList")))
         time.sleep(3)
         # get all lessons
-        lessonsList = self.driver.find_element(By.ID, "LessonsList")
+        if moduleId is not None: # if a module id is given, get the lessons of the module
+            module = self.driver.find_element(By.ID, moduleId)
+        else: # else get firsts lessons in the page
+            module = self.driver
+        lessonsList = module.find_element(By.ID, "LessonsList")
         # get all children of the lessons list
         lessonsListChildrens = lessonsList.find_elements(By.XPATH, ".//*")
         # remove the last element (the add lesson button)
@@ -118,7 +122,7 @@ class MentorToolsUtils:
     Create a new course
     :return: the id of the new course
     '''
-    def createCourse(self, courseName):
+    def createCourse(self, courseName, courseDescription=None):
         # click on the add course button
         buttons = self.driver.find_elements(By.TAG_NAME, "button")
         for button in buttons:
@@ -132,6 +136,9 @@ class MentorToolsUtils:
         courseOverview = CourseOverview(self.driver)
         # set course name
         courseOverview.addTitle(courseName)
+        # set course description
+        if courseDescription is not None:
+            courseOverview.addDescription(courseDescription)
         # save and close
         courseOverview.saveAndClose()
         # wait for the course to be created
@@ -147,7 +154,7 @@ class MentorToolsUtils:
         # click on the course with the given id
         self.click_on_element_id(idCourse)
         # wait for the modules list to load
-        WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.NAME, "NewModuleName")))
+        WebDriverWait(self.driver, 50).until(EC.presence_of_element_located((By.NAME, "NewModuleName")))
         # enter the name of the module and press enter
         inputNameModule = self.driver.find_element(By.NAME, "NewModuleName")
         inputNameModule.send_keys(moduleName)

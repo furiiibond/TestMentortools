@@ -39,7 +39,45 @@ class TestCaseForUser(unittest.TestCase):
         # click on the button Start Course
         courseView = CourseView(driver)
         # click on start course
-        courseView.start_course()
+        lessonView = courseView.start_course()
         # check if the course is started, if app-customer-course tagname is present
         self.assertEqual("app-lesson-desc" in driver.page_source, True)
+        # complete the course
+        self.assertEqual(lessonView.mark_as_completed(), True)
+
+
+    '''
+    Open a lesson that contains a quiz
+    Go to the lesson with the quiz and complete the quiz (no matter if successfully or not).
+    test@Quiz course
+    '''
+    def test_complete_quiz(self):
+        driver = get_driver()
+        # login to mentor tools
+        self.login_test(driver)
+        # go to customer dashboard
+        dashboard = Dashboard(driver)
+        # open the course
+        dashboard.open_course("test@Quiz")
+        # click on the button Start Course
+        courseView = CourseView(driver)
+        # click on start course
+        lessonView = courseView.start_course()
+        # answer the quiz
+        self.assertEqual(lessonView.answer_question("NO"), True) # answer NO earth is not flat
+
+    '''
+    Exit the preview mode
+    Click on the button in the top right corner to exit the preview mode.
+    '''
+    def test_exit_preview_mode(self):
+        driver = get_driver()
+        # login to mentor tools
+        self.login_test(driver)
+        # go to customer dashboard
+        dashboard = Dashboard(driver)
+        # exit preview mode
+        self.assertEqual(dashboard.exit_preview_mode(), True)
+
+
 

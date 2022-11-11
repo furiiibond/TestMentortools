@@ -27,15 +27,21 @@ class Dashboard:
     open a course
     Open the first course in the list of free courses
     '''
-    def open_course(self):
+    def open_course(self, courseName=None):
         # wait for courses list to load
-        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.ID, "FreeCourses")))
+        WebDriverWait(self.driver, 50).until(EC.presence_of_element_located((By.ID, "FreeCourses")))
         # click on the button Open Course of the first course
         coursebox = self.driver.find_elements(By.CLASS_NAME, "course-box")
-        # get the first course
-        course = coursebox[0]
         # get the button
-        buttons = course.find_elements(By.CLASS_NAME, "btn")
+        # get the first course
+        courseSelect = coursebox[0]
+        if courseName is not None:
+            # get the course with the given name
+            for course in coursebox:
+                if courseName in course.text:
+                    courseSelect = course
+                    break
+        buttons = courseSelect.find_elements(By.CLASS_NAME, "btn")
         for button in buttons:
             if button.text == "Open course":
                 # scroll to the end of the page
@@ -46,3 +52,18 @@ class Dashboard:
                 button.click()
                 return
         raise Exception("Open course button not found")
+
+    '''
+    Exit the preview mode
+    Click on the button in the top right corner to exit the preview mode.
+    '''
+    def exit_preview_mode(self):
+        buttons = self.driver.find_elements(By.CLASS_NAME, "btn")
+        for button in buttons:
+            if "✕" in button.text:
+                time.sleep(2)
+                button.click()
+                # check if i am on the admin page
+                WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.ID, "CourseList")))
+                return True
+        raise Exception("Exit preview mode button not found")
