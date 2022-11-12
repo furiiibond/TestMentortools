@@ -18,7 +18,7 @@ class MentorToolsUtils:
     def login(self, user, password):
         self.driver.get("https://jh-designtester.app.mentortools.com/login")
         # wait for the page to load
-        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.ID, "mat-input-0")))
+        WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.ID, "mat-input-0")))
         # type email
         self.driver.find_element(By.ID, "mat-input-0").send_keys(user)
         self.driver.implicitly_wait(10)

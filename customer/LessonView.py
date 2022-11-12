@@ -64,8 +64,9 @@ class LessonView():
                 # get the input linked to the label
                 idInput = label.get_attribute("for")
                 # wait for the input to be clickable
-                # click on the input
-                self.driver.find_element(By.ID, idInput).submit()
+                # click on the input get xpath
+                xpath = "//*[@id='" + idInput + "']"
+                self.driver.execute_script("arguments[0].click();",self.driver.find_element(By.XPATH, xpath))
                 # wait for the change to be saved
                 time.sleep(1)
                 # check if the response is correct by clicking on the button Check
