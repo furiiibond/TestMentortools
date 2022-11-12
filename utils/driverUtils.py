@@ -18,7 +18,7 @@ def get_driver():
     chromeOptions.add_argument("--headless")
     chromeOptions.add_argument("--disable-gpu")
     # chang binay location
-    chromeOptions.binary_location = "/usr/bin/chromium-browser"
+    chromeOptions.binary_location = "/usr/bin/chromium"
     prefs = {'download.default_directory': os.getcwd()}
     chromeOptions.add_experimental_option('prefs', prefs)
     return webdriver.Chrome(options=chromeOptions)
