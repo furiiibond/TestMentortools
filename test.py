@@ -1,15 +1,18 @@
-from pyvirtualdisplay import Display
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
-display = Display(visible=0, size=(800, 600))
-display.start()
-import pyautogui
-import pyperclip
+CHROME_PATH = '/usr/bin/google-chrome'
+CHROMEDRIVER_PATH = '/usr/bin/chromedriver'
+WINDOW_SIZE = "1920,1080"
 
-# Now Firefox will run in a virtual display.
-# You will not see the browser.
-browser = webdriver.Firefox()
-browser.get('http://www.google.com')
-browser.quit()
+chrome_options = Options()
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
+chrome_options.binary_location = CHROME_PATH
 
-display.stop()
+driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH,
+                          chrome_options=chrome_options
+                          )
+driver.get("https://www.google.com")
+driver.get_screenshot_as_file("capture.png")
+driver.close()
