@@ -25,5 +25,6 @@ class CourseView():
                 button.click()
                 # wait for the course to start
                 WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, "app-customer")))
+                time.sleep(2)
                 return LessonView(self.driver)
         raise Exception("Start course button not found")

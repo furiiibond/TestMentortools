@@ -1,8 +1,8 @@
 import os
 import time
 
-import pyautogui
-import pyperclip
+#import pyautogui
+#import pyperclip
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -51,33 +51,33 @@ class CourseOverview:
                 return
         raise Exception("Save url button not found")
 
-    '''
-    Add a video to the course by uploading a file
-    '''
-    def addVideoByFile(self, videoPath):
-        videoPath = os.path.abspath(videoPath)
-        # wait for element to load Text = "Add some element"
-        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[text()='Add some element']")))
-        buttons = self.driver.find_elements(By.CLASS_NAME, "btn")
-        for button in buttons:
-            if button.text == "Add Video":
-                button.click()
-                break
-        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "video-upload")))
-        # using pyautogui to upload the file
-        element_present = EC.presence_of_element_located((By.CLASS_NAME, "video-upload"))
-
-        WebDriverWait(self.driver, 10).until(element_present).click()  # This opens the windows file selector
-
-        time.sleep(1)
-        pyperclip.copy(videoPath)
-        pyautogui.hotkey("ctrl", "v")
-        time.sleep(1)
-        pyautogui.press('enter')
-        time.sleep(1)
-
-        # wait for the video to be uploaded text is video name
-        WebDriverWait(self.driver, 60).until(EC.presence_of_element_located((By.XPATH, "//*[text()='" + os.path.basename(videoPath) + "']")))
+    # '''
+    # Add a video to the course by uploading a file
+    # '''
+    # def addVideoByFile(self, videoPath):
+    #     videoPath = os.path.abspath(videoPath)
+    #     # wait for element to load Text = "Add some element"
+    #     WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[text()='Add some element']")))
+    #     buttons = self.driver.find_elements(By.CLASS_NAME, "btn")
+    #     for button in buttons:
+    #         if button.text == "Add Video":
+    #             button.click()
+    #             break
+    #     WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "video-upload")))
+    #     # using pyautogui to upload the file
+    #     element_present = EC.presence_of_element_located((By.CLASS_NAME, "video-upload"))
+    #
+    #     WebDriverWait(self.driver, 10).until(element_present).click()  # This opens the windows file selector
+    #
+    #     time.sleep(1)
+    #     pyperclip.copy(videoPath)
+    #     pyautogui.hotkey("ctrl", "v")
+    #     time.sleep(1)
+    #     pyautogui.press('enter')
+    #     time.sleep(1)
+    #
+    #     # wait for the video to be uploaded text is video name
+    #     WebDriverWait(self.driver, 60).until(EC.presence_of_element_located((By.XPATH, "//*[text()='" + os.path.basename(videoPath) + "']")))
 
     '''
     Add text to the course

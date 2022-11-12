@@ -5,7 +5,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from TestCaseForUser import TestCaseForUser
 from customer.CourseView import CourseView
 from customer.Dashboard import Dashboard
 from settings.CustomMenu import CustomMenuPage
@@ -388,27 +387,27 @@ class TestCaseForCC(unittest.TestCase):
         self.assertEqual(customMenuPage.getNumberOfItems(), nbItemsBefore - 1)
 
 
-    '''
-    Upload a video in the lesson
-    Check if this works. This is a common problem. Upload different videos in different length and different file formats.
-    '''
-    def test_upload_video_in_lesson(self):
-        driver = get_driver()
-        # login to mentor tools
-        self.login_test(driver)
-        # create a new lesson
-        courseName = "@test lesson video upload"
-        courseId, moduleId, lessonId = self.test_create_lesson(courseName)
-        # open the lesson
-        courseOverview = CourseOverview(driver, lessonId)
-        # add a video
-        courseOverview.addVideoByFile("./videos/big_buck_bunny.mp4")
-        # add a second video
-        courseOverview.addVideoByFile("./videos/bouchon_26.8g_19g_2004.avi")
-        # save the changes
-        courseOverview.saveAndClose()
-        # test in preview,if the videos are there
-        self.test_check_video(courseName)
+    # '''
+    # Upload a video in the lesson
+    # Check if this works. This is a common problem. Upload different videos in different length and different file formats.
+    # '''
+    # def test_upload_video_in_lesson(self):
+    #     driver = get_driver()
+    #     # login to mentor tools
+    #     self.login_test(driver)
+    #     # create a new lesson
+    #     courseName = "@test lesson video upload"
+    #     courseId, moduleId, lessonId = self.test_create_lesson(courseName)
+    #     # open the lesson
+    #     courseOverview = CourseOverview(driver, lessonId)
+    #     # add a video
+    #     courseOverview.addVideoByFile("./videos/big_buck_bunny.mp4")
+    #     # add a second video
+    #     courseOverview.addVideoByFile("./videos/bouchon_26.8g_19g_2004.avi")
+    #     # save the changes
+    #     courseOverview.saveAndClose()
+    #     # test in preview,if the videos are there
+    #     self.test_check_video(courseName)
 
 
     '''
