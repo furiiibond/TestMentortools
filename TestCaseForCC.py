@@ -434,10 +434,3 @@ class TestCaseForCC(unittest.TestCase):
         self.assertEqual(lessonView.get_nb_video(), 2)
 
 
-
-TestCaseForCC().test_create_lesson()
-TestCaseForCC().test_add_to_lesson()
-TestCaseForCC().test_duplicate_lesson()
-TestCaseForCC().test_delete_all_test_courses()
-
-

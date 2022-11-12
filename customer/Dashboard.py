@@ -46,8 +46,8 @@ class Dashboard:
             if button.text == "Open course":
                 # scroll to the end of the page
                 self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-                time.sleep(2)
                 WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable(button))
+                time.sleep(2)
                 # click on the button
                 button.click()
                 return
