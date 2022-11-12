@@ -435,10 +435,9 @@ class TestCaseForCC(unittest.TestCase):
 
 
 
-if __name__ == '__main__':
-    TestCaseForCC().test_create_lesson()
-    TestCaseForCC().test_add_to_lesson()
-    TestCaseForCC().test_duplicate_lesson()
-    TestCaseForCC().test_delete_all_test_courses()
+TestCaseForCC().test_create_lesson()
+TestCaseForCC().test_add_to_lesson()
+TestCaseForCC().test_duplicate_lesson()
+TestCaseForCC().test_delete_all_test_courses()
 
 
