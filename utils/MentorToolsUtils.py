@@ -239,6 +239,8 @@ class MentorToolsUtils:
         buttons = self.driver.find_elements(By.TAG_NAME, "button")
         for button in buttons:
             if button.text == "Deleted courses":
+                # wait for the button to be clickable
+                WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(button))
                 button.click()
                 break
         # wait for the deleted courses list to load
