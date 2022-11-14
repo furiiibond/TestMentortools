@@ -200,6 +200,8 @@ class TestCaseForCC_Dashboard(unittest.TestCase):
         # delete all tests courses
         for id in coursesIds:
             mentorToolsUtils.deleteCourse(id)
+        # empty the trash of courses
+        mentorToolsUtils.emptyTrash()
         # check if all test courses were deleted
         self.assertEqual(len(mentorToolsUtils.get_all_test_courses_ids()), 0)
 

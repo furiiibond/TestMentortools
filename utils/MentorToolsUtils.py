@@ -213,19 +213,21 @@ class MentorToolsUtils:
     Delete a course with the given id
     '''
     def deleteCourse(self, id):
-        # save the current url
-        currentUrl = self.driver.current_url
         # wait for the element to load
         WebDriverWait(self.driver, 50).until(EC.presence_of_element_located((By.ID, id)))
         # get the course with the given id
         course = self.driver.find_element(By.ID, id)
         # open the dropdown menu
+        # wait for the dropdown menu to load
+        WebDriverWait(course, 50).until(EC.presence_of_element_located((By.ID, "dropdownMenuButton1")))
         course.find_elements(By.ID, "dropdownMenuButton1")[0].click()
         # get all dropdown menu items
         dropdownMenuItems = course.find_elements(By.TAG_NAME, "li")
         # click on delete
         for item in dropdownMenuItems:
             if item.text == "Move to trash":
+                # wait for the element to be clickable
+                WebDriverWait(self.driver, 50).until(EC.element_to_be_clickable(item))
                 item.click()
                 break
         # wait for the information message to load
@@ -234,41 +236,7 @@ class MentorToolsUtils:
         moveToTrashMessage = self.driver.find_elements(By.TAG_NAME, "app-move-to-trash-message")[0]
         # click on close (first a)
         moveToTrashMessage.find_elements(By.TAG_NAME, "a")[0].click()
-        # go to deleted courses
-        # click on deleted courses button
-        buttons = self.driver.find_elements(By.TAG_NAME, "button")
-        for button in buttons:
-            if button.text == "Deleted courses":
-                # wait for the button to be clickable
-                WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(button))
-                button.click()
-                break
-        # wait for the deleted courses list to load
-        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.ID, id)))
-        # get the course with the given id
-        course = self.driver.find_element(By.ID, id)
-        # click on the delete button witch contain span with class "bi-trash-fill"
-        buttons = course.find_elements(By.TAG_NAME, "a")
-        for button in buttons:
-            if button.find_elements(By.CLASS_NAME, "bi-trash-fill"):
-                button.click()
-                # wait for delete confirmation modal to load
-                WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "modal-content")))
-                confirmMenu = self.driver.find_elements(By.CLASS_NAME, "modal-content")[0]
-                # type delete in the input
-                confirmMenu.find_element(By.TAG_NAME, "input").send_keys("DELETE")
-                time.sleep(1)
-                # click on delete button
-                buttons = confirmMenu.find_elements(By.TAG_NAME, "button")
-                for button in buttons:
-                    if button.text == "Delete":
-                        button.click()
-                        time.sleep(2)
-                        # go back to the previous url
-                        self.driver.get(currentUrl)
-                        return True
-                raise Exception("Delete in menu conf : button not found")
-        raise Exception("Delete button not found")
+        return True
 
 
     '''
@@ -315,4 +283,55 @@ class MentorToolsUtils:
         # wait for the preview to load
         self.driver.implicitly_wait(10)
         return True
+
+    '''
+    Empty the trash of courses
+    '''
+    def emptyTrash(self):
+        # go to deleted courses
+        # click on the deleted courses button
+        buttons = self.driver.find_elements(By.TAG_NAME, "button")
+        for button in buttons:
+            if "Deleted courses" in button.text:
+                try:
+                    button.click()
+                    break
+                except:
+                    pass
+        # wait for the deleted courses list to load
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.ID, "CourseList")))
+        # click on the delete button witch contain span with class "bi-trash-fill"
+        courseList = self.driver.find_element(By.ID, "CourseList")
+        # get all children of the course list
+        courses = courseList.find_elements(By.XPATH, "./*")
+        while len(courses) > 0:
+            buttons = courses[0].find_elements(By.TAG_NAME, "a")
+            for button in buttons:
+                try:
+                    if button.find_elements(By.CLASS_NAME, "bi-trash-fill"):
+                        button.click()
+                        # wait for delete confirmation modal to load
+                        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "modal-content")))
+                        confirmMenu = self.driver.find_elements(By.CLASS_NAME, "modal-content")[0]
+                        # type delete in the input
+                        confirmMenu.find_element(By.TAG_NAME, "input").send_keys("DELETE")
+                        time.sleep(1)
+                        # click on delete button
+                        buttons = confirmMenu.find_elements(By.TAG_NAME, "button")
+                        for button in buttons:
+                            if button.text == "Delete":
+                                button.click()
+                                time.sleep(1)
+                                break
+                except:
+                    continue
+            try:
+                # wait for the deleted courses list to load
+                WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.ID, "CourseList")))
+                # click on the delete button witch contain span with class "bi-trash-fill"
+                courseList = self.driver.find_element(By.ID, "CourseList")
+                # get all children of the course list
+                courses = courseList.find_elements(By.XPATH, "./*")
+            except:
+                return True
 
