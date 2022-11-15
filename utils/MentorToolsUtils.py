@@ -153,8 +153,9 @@ class MentorToolsUtils:
     def addModule(self, idCourse, moduleName):
         # click on the course with the given id
         self.click_on_element_id(idCourse)
+        time.sleep(1) # wait for the page to load
         # wait for the modules list to load
-        WebDriverWait(self.driver, 50).until(EC.presence_of_element_located((By.NAME, "NewModuleName")))
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.NAME, "NewModuleName")))
         # enter the name of the module and press enter
         inputNameModule = self.driver.find_element(By.NAME, "NewModuleName")
         inputNameModule.send_keys(moduleName)
