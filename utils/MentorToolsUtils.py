@@ -55,7 +55,11 @@ class MentorToolsUtils:
     def click_on_element_id(self, id):
         # wait for element to load
         WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.ID, id)))
-        self.driver.find_element(By.ID, id).click()
+        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.ID, id)))
+        # scroll to the element
+        element = self.driver.find_element(By.ID, id)
+        self.driver.execute_script("arguments[0].scrollIntoView();", element)
+        element.click()
         self.driver.implicitly_wait(10)
 
     '''
@@ -83,14 +87,14 @@ class MentorToolsUtils:
     Get all the lessons ids
     '''
     def get_lessons_ids(self, moduleId=None):
-        # wait for element LessonList to load
-        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.ID, "LessonsList")))
-        time.sleep(3)
         # get all lessons
         if moduleId is not None: # if a module id is given, get the lessons of the module
             module = self.driver.find_element(By.ID, moduleId)
         else: # else get firsts lessons in the page
             module = self.driver
+        # wait for element LessonList to load
+        WebDriverWait(module, 10).until(EC.presence_of_element_located((By.ID, "LessonsList")))
+        time.sleep(3)
         lessonsList = module.find_element(By.ID, "LessonsList")
         # get all children of the lessons list
         lessonsListChildrens = lessonsList.find_elements(By.XPATH, ".//*")
@@ -153,11 +157,12 @@ class MentorToolsUtils:
     def addModule(self, idCourse, moduleName):
         # click on the course with the given id
         self.click_on_element_id(idCourse)
-        time.sleep(1) # wait for the page to load
+        # get course
+        course = self.driver.find_element(By.ID, idCourse)
         # wait for the modules list to load
-        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.NAME, "NewModuleName")))
+        WebDriverWait(course, 10).until(EC.presence_of_element_located((By.ID, "moduleName")))
         # enter the name of the module and press enter
-        inputNameModule = self.driver.find_element(By.NAME, "NewModuleName")
+        inputNameModule = course.find_element(By.ID, "moduleName")
         inputNameModule.send_keys(moduleName)
         time.sleep(2)
         inputNameModule.send_keys(Keys.ENTER)
@@ -173,18 +178,23 @@ class MentorToolsUtils:
     def addLesson(self, idModule, lessonName):
         # click on the module with the given id
         self.click_on_element_id(idModule)
+        # get module
+        module = self.driver.find_element(By.ID, idModule)
         # wait for the lessons list to load
-        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.NAME, "NewLessonName")))
+        WebDriverWait(module, 10).until(EC.presence_of_element_located((By.NAME, "NewLessonName")))
         # enter the name of the lesson
-        self.driver.find_element(By.NAME, "NewLessonName").send_keys(lessonName)
+        module.find_element(By.NAME, "NewLessonName").send_keys(lessonName)
         # click on the add button
-        buttons = self.driver.find_elements(By.TAG_NAME, "button")
+        buttons = module.find_elements(By.TAG_NAME, "button")
         for button in buttons:
-            if button.text == "Add Lesson":
+            if "Add Lesson" in button.text:
+                # wait for the button to be clickable
+                WebDriverWait(module, 10).until(EC.element_to_be_clickable(button))
+                time.sleep(1)
                 button.click()
                 break
         # return the id of the new lesson
-        return self.get_lessons_ids()[-1] # the last element is the new lesson
+        return self.get_lessons_ids(idModule)[-1] # the last element is the new lesson
 
     '''
     get name of the course with the given id
