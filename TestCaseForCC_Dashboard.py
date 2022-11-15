@@ -191,6 +191,7 @@ class TestCaseForCC_Dashboard(unittest.TestCase):
      test delete all test courses
     '''
     def test_delete_all_test_courses(self):
+        self.test_create_course()
         driver = get_driver()
         self.login_test(driver)
         # login to mentor tools
@@ -199,10 +200,7 @@ class TestCaseForCC_Dashboard(unittest.TestCase):
         coursesIds = mentorToolsUtils.get_all_test_courses_ids()
         # delete all tests courses
         for id in coursesIds:
-            try:
-                mentorToolsUtils.deleteCourse(id)
-            except:
-                pass
+            mentorToolsUtils.deleteCourse(id)
         # empty the trash of courses
         mentorToolsUtils.emptyTrash()
         # check if all test courses were deleted
